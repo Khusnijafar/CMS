@@ -1,0 +1,75 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!------ Include the above in your HEAD tag ---------->
+
+
+
+    <link rel="stylesheet" href="/stylesheets/register_login.css">
+
+</head>
+
+<body onload=<%=registerPage?"registerPage()":''%></body>>
+
+<nav class="navbar navbar-default bg-transparent">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="http://localhost:3000/"><span class="fas fa-angle-double-left">
+                    Dashboard</span>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="login-reg-panel">
+    <div class="login-info-box">
+        <h2>Have an account?</h2>
+        <p>Langsung ke login aja yaa</p>
+        <label id="label-register" for="log-reg-show">Login</label>
+        <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
+    </div>
+
+    <div class="register-info-box">
+        <h2>Don't have an account?</h2>
+        <p>Silahkan melakukan register dulu yaa</p>
+        <label id="label-login" for="log-login-show">Register</label>
+        <input type="radio" name="active-log-panel" id="log-login-show">
+    </div>
+
+    <div class="white-panel">
+        <div class="login-show">
+            <form action="/login" method="post">
+                <h2>LOGIN</h2>
+                <input type="text" placeholder="Email" id="email_login" name="email">
+                <input type="password" placeholder="Password" id="password_login" name="password">
+                <button type="submit" class="btn btn-warning btn-lg">Login</button>
+                <p id="loginsuccess">Forgot password?</p>
+            </form>
+        </div>
+        <div class="register-show">
+            <form action="/register" method="post">
+                <h2>REGISTER</h2>
+                <div class="card-body">
+                    <% if (message.length > 0) { %>
+                    <small id="emailHelp" class="form-text text-white text-muted">
+                        <%= message %></small>
+                    <% } %>
+                    <input type="text" placeholder="Email" id="email_register" name="email">
+                    <input type="password" placeholder="Password" id="password_register" name="password">
+                    <input type="password" placeholder="Retype Password" id="retypepassword_register" name="retypepassword">
+                    <button type="submit" class="btn btn-warning btn-lg">Register</button>
+                    <p id="registersuccess"></p>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="/javascripts/register_login.js"></script>
+</body>
+</html>

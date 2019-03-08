@@ -1,0 +1,59 @@
+<% include partials/header.ejs%>
+
+<body>
+
+
+    <% include partials/navbar.ejs%>
+    <div class="container">
+        <div class="panel-body">
+            <button id="add-btn" class="btn btn-primary">Add</button><br>
+            
+            <!-- FORM TAMBAH -->
+            <div id="formAdd" class="panel panel-default" style="background: whitesmoke;" isEdit="0">
+                <div class="panel-body">
+                    <form class="form-inline" id="tambah">
+                        <h3></h3>
+                        <div class="form-group">
+                            <label for="addletter" class="text-left">Letter</label>
+                            <input type="text" class="form-control" id="addletter" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addfrequency">Frequency</label>
+                            <input type="text" class="form-control" id="addfrequency" required>
+                        </div>
+                        <input type="hidden" id="rahasia">
+                        <button type="submit" class="btn btn-success">Save</span></button>
+                    </form>
+                </div>
+            </div>
+            <!--  SEARCHING -->
+
+            <form class="form-inline">
+                <h3>Search</h3>
+                <hr>
+                <div class="form-group">
+                    <label for="searchletter" class="text-left">Letter</label>
+                    <input type="text" class="form-control" id="searchletter">
+                </div>
+                <div class="form-group">
+                    <label for="searchfrequency">Frequency</label>
+                    <input type="number" class="form-control" id="searchfrequency">
+                </div>
+            </form>
+
+            <br>
+            <h3>List of Data</h3>
+            <table class="table table-striped" id="dataTable">
+                <thead>
+                    <th>No</th>
+                    <th>ID</th>
+                    <th>Letter</th>
+                    <th>Frequency</th>
+                    <th>Action</th>
+                </thead>
+                <tbody class="myTable" id="myTable">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
