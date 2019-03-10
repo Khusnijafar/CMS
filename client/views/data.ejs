@@ -1,59 +1,249 @@
-<% include partials/header.ejs%>
+<% include partials/header %>
+<% include partials/navbar %>
+<div class="container">
 
-<body>
-
-
-    <% include partials/navbar.ejs%>
-    <div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <b class="panel-title">DATA</b>
+        </div>
         <div class="panel-body">
-            <button id="add-btn" class="btn btn-primary">Add</button><br>
-            
-            <!-- FORM TAMBAH -->
-            <div id="formAdd" class="panel panel-default" style="background: whitesmoke;" isEdit="0">
+            <button id="button-add" type="submit" class="btn btn-primary" style="margin-bottom:10px"><span class="glyphicon glyphicon-plus">Add</span></button>
+            <div id="input-alert" class="alert alert-danger" role="alert"></div>
+            <div id="add-form" class="panel panel-primary">
                 <div class="panel-body">
-                    <form class="form-inline" id="tambah">
+                    <form class="form-inline" id="form-add">
+                        <input id="data-id" type="hidden" value="" />
                         <h3></h3>
                         <div class="form-group">
                             <label for="addletter" class="text-left">Letter</label>
-                            <input type="text" class="form-control" id="addletter" required>
+                            <input type="text" class="form-control" id="addletter" placeholder="A" required>
                         </div>
                         <div class="form-group">
                             <label for="addfrequency">Frequency</label>
-                            <input type="text" class="form-control" id="addfrequency" required>
+                            <input type="text" class="form-control" id="addfrequency" placeholder="0.000" required>
                         </div>
-                        <input type="hidden" id="rahasia">
-                        <button type="submit" class="btn btn-success">Save</span></button>
+                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-save">Save</span></button>
                     </form>
                 </div>
             </div>
-            <!--  SEARCHING -->
-
-            <form class="form-inline">
+            <form id="search-form" class="form-inline">
                 <h3>Search</h3>
-                <hr>
                 <div class="form-group">
                     <label for="searchletter" class="text-left">Letter</label>
-                    <input type="text" class="form-control" id="searchletter">
+                    <input type="text" class="form-control" id="searchletter" placeholder="A">
                 </div>
                 <div class="form-group">
                     <label for="searchfrequency">Frequency</label>
-                    <input type="number" class="form-control" id="searchfrequency">
+                    <input type="text" class="form-control" id="searchfrequency" placeholder="0.000">
                 </div>
             </form>
-
             <br>
             <h3>List of Data</h3>
-            <table class="table table-striped" id="dataTable">
+            <table id="data-table" class="table table-striped">
                 <thead>
-                    <th>No</th>
+                    <th>#</th>
                     <th>ID</th>
                     <th>Letter</th>
                     <th>Frequency</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </thead>
-                <tbody class="myTable" id="myTable">
+                <tbody class="table" id="table">
                 </tbody>
             </table>
         </div>
-
     </div>
+</div>
+
+<script type="text/javascript">
+    const API_URL = 'http://localhost:3001/api/data/'
+    const loadData = () => {
+        $.ajax({
+                method: "GET",
+                url: API_URL
+            })
+            .done(function (data) {
+                let html = "";
+                data.forEach((item, index) => {
+                    html += `<tr>`
+                    html += `<td>${index + 1}</td>`
+                    html += `<td>${item._id}</td>`
+                    html += `<td>${item.letter}</td>`
+                    html += `<td>${item.frequency}</td>`
+                    html +=
+                        `<td>
+                                <button class="btn btn-danger btn-hapus" data-id="${item._id}">Delete</button>
+                                <button class="btn btn-primary btn-update" data-id="${item._id}" data-letter="${item.letter}" 
+                                data-frequency="${item.frequency}">Update </button>
+                             </td> `
+                    html += `</tr>`
+                });
+                $('#data-table tbody').html(html);
+            });
+    }
+
+    const saveData = () => {
+        let id = $('#data-id').val();
+        if (!id) {
+            $.ajax({
+                    method: "POST",
+                    url: API_URL,
+                    data: {
+                        letter: $('#addletter').val(),
+                        frequency: $('#addfrequency').val()
+                    }
+                })
+                .done(function (data) {
+                    loadData();
+                    $('#addletter').val('')
+                    $('#addfrequency').val('')
+                    $('#add-form').toggle(500);
+                });
+        } else {
+            $.ajax({
+                    method: "PUT",
+                    url: API_URL + id,
+                    data: {
+                        letter: $('#addletter').val(),
+                        frequency: $('#addfrequency').val()
+                    }
+                })
+                .done(function (data) {
+                    loadData();
+                    $('#addletter').val('');
+                    $('#addfrequency').val('');
+                    $('#data-id').val('');
+                    $('#add-form').toggle(500);
+                })
+        }
+    }
+
+    // const searchData = () => {
+    //     $.ajax({
+    //             method: "POST",
+    //             url: API_URL + search,
+    //             data: {
+    //                 letter: $('#searchletter').val(),
+    //                 frequency: $('#searchfrequency').val()
+    //             }
+    //         })
+    //         .done(function (data) {
+    //             loadData();
+    //     });
+    // }
+
+    $(document).ready(() => {
+        loadData();
+        $('#add-form').hide();
+        $('#input-alert').hide();
+
+        $('#button-add').click(function () {
+            $('#addletter').val('');
+            $('#addfrequency').val('');
+            $('#data-id').val('');
+            $('#add-form').toggle(500);
+        })
+
+        $('#form-add').submit((e) => {
+            e.preventDefault();
+            saveData();
+        });
+
+        $('#searchletter').on("keyup", function () {
+            let letter = $('#searchletter').val();
+            if (letter) {
+                $.post(API_URL + 'search', {
+                        letter: letter
+                    })
+                    .done((data) => {
+
+
+                        let html = "";
+                        data.forEach((item, index) => {
+                            html += `<tr>`
+                            html += `<td>${index + 1}</td>`
+                            html += `<td>${item._id}</td>`
+                            html += `<td>${item.letter}</td>`
+                            html += `<td>${item.frequency}</td>`
+                            html +=
+                                `<td>
+                                <button class="btn btn-danger btn-hapus" data-id="${item._id}">Delete</button>
+                                <button class="btn btn-primary btn-update" data-id="${item._id}" data-letter="${item.letter}" 
+                                data-frequency="${item.frequency}">Update </button>
+                             </td> `
+                            html += `</tr>`
+                        });
+                        $('#data-table tbody').html(html);
+                    });
+            } else {
+                loadData()
+            }
+        })
+        $('#searchfrequency').on("keyup", function () {
+            let frequency = $('#searchfrequency').val();
+            if (frequency) {
+                $.post(API_URL + 'search', {
+                        frequency: frequency
+                    })
+                    .done((data) => {
+
+
+                        let html = "";
+                        data.forEach((item, index) => {
+                            html += `<tr>`
+                            html += `<td>${index + 1}</td>`
+                            html += `<td>${item._id}</td>`
+                            html += `<td>${item.letter}</td>`
+                            html += `<td>${item.frequency}</td>`
+                            html +=
+                                `<td>
+                                <button class="btn btn-danger btn-hapus" data-id="${item._id}">Delete</button>
+                                <button class="btn btn-primary btn-update" data-id="${item._id}" data-letter="${item.letter}" 
+                                data-frequency="${item.frequency}">Update </button>
+                             </td> `
+                            html += `</tr>`
+                        });
+                        $('#data-table tbody').html(html);
+                    });
+            } else {
+                loadData()
+            }
+       })
+
+        $('#searchfrequency').on("keyup", function () {
+            let value = $(this).val()
+            console.log(value);
+
+            $('#table').filter(function () {
+                $('data-table').toggle(500)
+            })
+        })
+
+        $('#data-table tbody').on("click", ".btn-update", function () {
+            console.log("diedit", this);
+            let letter = $(this).attr('data-letter');
+            let frequency = $(this).attr('data-frequency');
+            let id = $(this).attr('data-id');
+            $('#addletter').val(letter)
+            $('#addfrequency').val(frequency)
+            $('#data-id').val(id)
+            $('#add-form').toggle(500);
+        })
+
+        $('#data-table tbody').on("click", ".btn-hapus", function () {
+            console.log("dihapus", this);
+            let id = $(this).attr('data-id');
+            console.log(id);
+
+            $.ajax({
+                    method: 'DELETE',
+                    url: API_URL + id
+                })
+                .done(function (data) {
+                    loadData()
+                })
+        })
+    });
+</script>
+</body>
+
+</html>

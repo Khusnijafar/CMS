@@ -1,0 +1,63 @@
+<% include partials/header.ejs%>
+
+<body>
+    
+    <div class="container">
+        <div id="top_x_div" style="width: 800px; height: 600px;"></div>
+    </div>
+
+    <script type="text/javascript">
+        google.charts.load('current', {'packages': ['bar']});
+        google.charts.setOnLoadCallback(drawStuff);
+        
+        const API_URL = 'http://localhost:3001/api/data'
+       
+        function drawStuff() {
+            $.ajax({
+                    url: API_URL,
+                    method: 'GET'
+                })
+                .done(function (data) {
+                    let dataData = [
+                        ['Letter', 'Frequency']
+                    ];
+                    data.forEach(item => {
+                        dataData.push([item.letter, item.frequency])
+                    })
+
+                    var datas = google.visualization.arrayToDataTable(dataData)
+
+
+            var options = {
+     
+                width: 800,
+                legend: {
+                    position: 'none'
+                },
+                chart: {
+                    title: 'Frequency',
+                    subtitle: 'popularity by percentage'
+                },
+                axes: {
+                    x: {
+                        0: {
+                            side: 'top',
+                            label: 'JUDUL BUKU'
+                        } // Top x-axis.
+                    }
+                },
+                bar: {
+                    groupWidth: "90%"
+                }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+            // Convert the Classic options to Material options.
+            chart.draw(datas, google.charts.Bar.convertOptions(options));
+        })
+    };
+    </script>
+
+</body>
+
+</html>

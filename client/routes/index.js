@@ -30,6 +30,12 @@ router.get('/home', function(req, res, next) {
   });
 });
 
+router.get('/data', function(req, res, next) {
+  res.render('data', {
+    data: req.data
+  });
+});
+
 router.get('/line', function(req, res, next) {
   res.render('line');
 });
