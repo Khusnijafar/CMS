@@ -36,6 +36,10 @@ router.get('/data', function(req, res, next) {
   });
 });
 
+router.get('/datadate', function(req, res, next) {
+  res.render('datadate')
+});
+
 router.get('/line', function(req, res, next) {
   res.render('line');
 });

@@ -51,7 +51,7 @@ router.post('/search', (req, res) => {
     let data = []
     let keyword = {};
     if (req.body.letter) {
-        keyword.letter = req.body.letter
+        keyword.letter = moment(req.body.letter).format('YYYY-MM-DD')
     }
     if (req.body.frequency) {
         keyword.frequency = req.body.frequency

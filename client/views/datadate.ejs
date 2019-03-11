@@ -1,5 +1,6 @@
 <% include partials/header %>
 <% include partials/navbar %>
+
 <div class="container">
 
     <div class="panel panel-primary">
@@ -16,7 +17,7 @@
                         <h3></h3>
                         <div class="form-group">
                             <label for="addletter" class="text-left">Letter</label>
-                            <input type="text" class="form-control" id="addletter" placeholder="A" required>
+                            <input width="250" class="form-control" id="addletter" required>
                         </div>
                         <div class="form-group">
                             <label for="addfrequency">Frequency</label>
@@ -30,11 +31,11 @@
                 <h3>Search</h3>
                 <div class="form-group">
                     <label for="searchletter" class="text-left">Letter</label>
-                    <input type="text" class="form-control" id="searchletter" placeholder="A">
+                    <input width="250" type="text" class="form-control" id="searchletter">
                 </div>
                 <div class="form-group">
-                    <label for="searchfrequency">Frequency</label>
-                    <input type="text" class="form-control" id="searchfrequency" placeholder="0.000">
+                    <label for="searchfrequency" class="text-left">Frequency</label>
+                    <input width="250" type="text" class="form-control" id="searchfrequency" placeholder="0.000">
                 </div>
             </form>
             <br>
@@ -54,8 +55,17 @@
     </div>
 </div>
 
+<script>
+    $('#addletter').datepicker({
+        uiLibrary: 'bootstrap3'
+    });
+    $('#searchletter').datepicker({
+        uiLibrary: 'bootstrap3'
+    });
+</script>
+
 <script type="text/javascript">
-    const API_URL = 'http://localhost:3001/api/data/'
+    const API_URL = 'http://localhost:3001/api/datadate/'
     const loadData = () => {
         $.ajax({
                 method: "GET",
@@ -134,13 +144,16 @@
             saveData();
         });
 
-        $('#searchletter').on("keyup", function () {
+        $('#searchletter').on("change", function () {
             let letter = $('#searchletter').val();
+            console.log(letter);
             if (letter) {
                 $.post(API_URL + 'search', {
                         letter: letter
                     })
                     .done((data) => {
+                        console.log(data);
+                        
                         let html = "";
                         data.forEach((item, index) => {
                             html += `<tr>`
@@ -169,6 +182,7 @@
                         frequency: frequency
                     })
                     .done((data) => {
+
                         let html = "";
                         data.forEach((item, index) => {
                             html += `<tr>`
@@ -189,7 +203,7 @@
             } else {
                 loadData()
             }
-       })
+        })
 
         $('#searchfrequency').on("keyup", function () {
             let value = $(this).val()
@@ -199,6 +213,7 @@
                 $('data-table').toggle(500)
             })
         })
+
 
         $('#data-table tbody').on("click", ".btn-update", function () {
             console.log("diedit", this);

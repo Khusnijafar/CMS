@@ -1,0 +1,9 @@
+body {
+    padding-top: 20px;
+    background-image: url(https://wallpapercave.com/wp/wp2728553.jpg);
+}
+
+.panel-body .btn:not(.btn-block) {
+    width: 120px;
+    margin-bottom: 10px;
+}

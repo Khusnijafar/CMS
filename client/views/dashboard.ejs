@@ -1,43 +1,52 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>CMS</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <link rel="stylesheet" href="/stylesheets/dashboard.css">
+  <!------ Include the above in your HEAD tag ---------->
 </head>
+
 <body>
+  <br> <br> <br> <br> <br>
   <div class="container">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title">Welcome to dashboard</h3>
-      </div>
-      <div class="panel-body text-center">
-        <a href="http://localhost:3000/line" class="btn btn-danger" style="width:100%; margin-bottom:5px">
-          <span class="glyphicon glyphicon-signal"></span>
-          <p>Line</p>
-        </a>
-        <a href="http://localhost:3000/pie" class="btn btn-warning" style="width:100%; margin-bottom:5px">
-          <span class="glyphicon glyphicon-cd"></span>
-          <p>Pie</p>
-        </a>
-        <a href="http://localhost:3000/bar" class="btn btn-primary" style="width:100%; margin-bottom:5px">
-          <span class="glyphicon glyphicon-stats"></span>
-          <p>Bar</p>
-        </a>
-        <a href="http://localhost:3000/map" class="btn btn-success" style="width:100%; margin-bottom:5px">
-          <span class="glyphicon glyphicon-globe"></span>
-          <p>Maps</p>
-        </a>
-        <a href="http://localhost:3000/login" class="btn btn-info" style="width:100%; margin-bottom:5px">
-          <p class="glyphicon glyphicon-user"></p>
-          Admin Panel
-        </a>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h1 class="panel-title" style="font-size:30px">
+              <span style="height:75px; font-size: 36px" class="glyphicon glyphicon-bookmark" ></span > Welcome to Dashboard</h1>
+          </div>
+
+          <div class="panel-body" style="margin-bottom:50px">
+            <!-- <div class="panel panel-default">
+              <div class="panel-heading">Panel Heading</div>=
+              <div class="panel-body">Panel Content</div> -->
+            </div>
+
+            <div class="container">
+              <div class="col-md-12" style=" margin-bottom:50px">
+                <a href="http://localhost:3000/line" style="height:175px; width:230px" class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-signal" style="font-size:100px"></span>
+                  <br>Line</a>
+                <a href="http://localhost:3000/pie" style="height:175px; width:230px" class="btn btn-warning btn-lg" role="button"><span class="glyphicon glyphicon-adjust" style="font-size:100px"></span>
+                  <br />Pie</a>
+                <a href="http://localhost:3000/bar" style="height:175px; width:230px" class="btn btn-success btn-lg" role="button"><span class="glyphicon glyphicon-stats" style="font-size:100px"></span>
+                  <br />Bar</a>
+                <a href="http://localhost:3000/map" style="height:175px; width:230px" class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-globe" style="font-size:100px"></span>
+                  <br />Maps</a>
+              </div>
+            </div>
+            <a href="/login" style="height:100px; font-size: 36px" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-user" style="font-size:60px"></span>
+              Admin Panel</a>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
+
 </body>
+
 </html>
