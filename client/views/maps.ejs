@@ -1,0 +1,204 @@
+<% include partials/header %>
+<% include partials/navbar %>
+
+<div class="container">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <b class="panel-title">DATA</b>
+        </div>
+        <div class="panel-body">
+            <button id="button-add" type="submit" class="btn btn-primary" style="margin-bottom:10px"><span class="glyphicon glyphicon-plus">Add</span></button>
+            <div id="add-form" class="panel panel-primary">
+                <div class="panel-body">
+                    <form class="form-inline" id="form-add">
+                        <input id="data-id" type="hidden" value="" />
+                        <h3></h3>
+                        <div class="form-group">
+                            <label for="addletter" class="text-left">Title</label>
+                            <input type="text" class="form-control" id="addtitle" placeholder="title of map" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addlatitude">Latitude</label>
+                            <input type="text" class="form-control" id="addlatitude" placeholder="0.0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addlongitude">Longitude</label>
+                            <input type="text" class="form-control" id="addlongitude" placeholder="0.0000" required>
+                        </div>
+                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-save">Save</span></button>
+                    </form>
+                </div>
+            </div>
+            <form id="search-form" class="form-inline">
+                <h3>Search</h3>
+                <div class="form-group">
+                    <label for="searchtitle" class="text-left">Title</label>
+                    <input type="text" class="form-control" id="searchtitle" placeholder="title...">
+                </div>
+
+            </form>
+            <br>
+            <h3>List of Data</h3>
+            <table id="data-table" class="table table-striped">
+                <thead>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody class="table" id="table">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const API_URL = 'http://localhost:3001/api/maps/'
+    const loadData = () => {
+        $.ajax({
+                method: "GET",
+                url: API_URL
+            })
+            .done(function (data) {
+                let html = "";
+                data.forEach((item, index) => {
+                    html += `<tr>`
+                    html += `<td>${index + 1}</td>`
+                    html += `<td>${item._id}</td>`
+                    html += `<td>${item.title}</td>`
+                    html += `<td>${item.lat}</td>`
+                    html += `<td>${item.lng}</td>`
+                    html +=
+                        `<td>
+                                <button class="btn btn-danger btn-hapus" data-id="${item._id}">Delete</button>
+                                <button class="btn btn-primary btn-update" data-id="${item._id}" data-title="${item.title}" 
+                                data-latitude="${item.lat}" data-longitude="${item.lng}">Update </button>
+                             </td> `
+                    html += `</tr>`
+                });
+                $('#data-table tbody').html(html);
+            });
+    }
+
+    const saveData = () => {
+        let id = $('#data-id').val();
+        if (!id) {
+            $.ajax({
+                    method: "POST",
+                    url: API_URL,
+                    data: {
+                        title: $('#addtitle').val(),
+                        lat: $('#addlatitude').val(),
+                        lng: $('#addlongitude').val()
+                    }
+                })
+                .done(function (data) {
+                    loadData();
+                    $('#addtitle').val('');
+                    $('#addlatitude').val('');
+                    $('#addlongitude').val('');
+                    $('#add-form').toggle(500);
+                });
+        } else {
+            $.ajax({
+                    method: "PUT",
+                    url: API_URL + id,
+                    data: {
+                        title: $('#addtitle').val(),
+                        lat: $('#addlatitude').val(),
+                        lng: $('#addlongitude').val()
+                    }
+                })
+                .done(function (data) {
+                    loadData();
+                    $('#addtitle').val('');
+                    $('#addlatitude').val('');
+                    $('#addlongitude').val('');
+                    $('#add-form').toggle(500);
+                })
+        }
+    }
+
+    $(document).ready(() => {
+        loadData();
+        $('#add-form').hide();
+        $('#input-alert').hide();
+
+        $('#button-add').click(function () {
+            $('#addtitle').val('');
+            $('#addlatitude').val('');
+            $('#addlongitude').val('');
+            $('#data-id').val('');
+            $('#add-form').toggle(500);
+        })
+
+        $('#form-add').submit((e) => {
+            e.preventDefault();
+            saveData();
+        });
+
+        $('#searchtitle').on("keyup", function () {
+            let title = $('#searchtitle').val();
+            if (title) {
+                $.post(API_URL + 'search', {
+                        title: title
+                    })
+                    .done((data) => {
+                        let html = "";
+                        data.forEach((item, index) => {
+                            html += `<tr>`
+                            html += `<td>${index + 1}</td>`
+                            html += `<td>${item._id}</td>`
+                            html += `<td>${item.title}</td>`
+                            html += `<td>${item.lat}</td>`
+                            html += `<td>${item.lng}</td>`
+                            html +=
+                                `<td>
+                                <button class="btn btn-danger btn-hapus" data-id="${item._id}">Delete</button>
+                                <button class="btn btn-primary btn-update" data-id="${item._id}" data-title="${item.title}" 
+                                data-latitude="${item.lat}" data-longitude="${item.lng}">Update </button>
+                             </td> `
+                            html += `</tr>`
+                        });
+                        $('#data-table tbody').html(html);
+                    });
+            } else {
+                loadData()
+            }
+        })
+        
+        $('#data-table tbody').on("click", ".btn-update", function () {
+            console.log("diedit", this);
+            let title = $(this).attr('data-title');
+            let lat = $(this).attr('data-latitude');
+            let lng = $(this).attr('data-longitude');
+            let id = $(this).attr('data-id');
+            $('#addtitle').val(title)
+            $('#addlatitude').val(lat)
+            $('#addlongitude').val(lng)
+            $('#data-id').val(id)
+            $('#add-form').toggle(500);
+        })
+
+        $('#data-table tbody').on("click", ".btn-hapus", function () {
+            console.log("dihapus", this);
+            let id = $(this).attr('data-id');
+            console.log(id);
+
+            $.ajax({
+                    method: 'DELETE',
+                    url: API_URL + id
+                })
+                .done(function (data) {
+                    loadData()
+                })
+        })
+    });
+</script>
+</body>
+
+</html>

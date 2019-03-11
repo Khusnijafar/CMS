@@ -2,14 +2,15 @@
 <% include partials/navbar %>
 
 <div class="container">
-
+    <div id="input-alert" class="alert alert-success" role="alert"></div>
+    <div id="input-alert-danger" class="alert alert-danger" role="alert"></div>
     <div class="panel panel-primary">
         <div class="panel-heading text-center">
             <b class="panel-title">DATA</b>
         </div>
         <div class="panel-body">
             <button id="button-add" type="submit" class="btn btn-primary" style="margin-bottom:10px"><span class="glyphicon glyphicon-plus">Add</span></button>
-            <div id="input-alert" class="alert alert-danger" role="alert"></div>
+            
             <div id="add-form" class="panel panel-primary">
                 <div class="panel-body">
                     <form class="form-inline" id="form-add">
@@ -93,44 +94,62 @@
 
     const saveData = () => {
         let id = $('#data-id').val();
-        if (!id) {
-            $.ajax({
-                    method: "POST",
-                    url: API_URL,
-                    data: {
-                        letter: $('#addletter').val(),
-                        frequency: $('#addfrequency').val()
-                    }
-                })
-                .done(function (data) {
-                    loadData();
-                    $('#addletter').val('')
-                    $('#addfrequency').val('')
-                    $('#add-form').toggle(500);
-                });
+        let frequency = $('#addfrequency').val();
+        if (isNaN(frequency) === true) {
+            showAlert1('Please insert number')
         } else {
-            $.ajax({
-                    method: "PUT",
-                    url: API_URL + id,
-                    data: {
-                        letter: $('#addletter').val(),
-                        frequency: $('#addfrequency').val()
-                    }
-                })
-                .done(function (data) {
-                    loadData();
-                    $('#addletter').val('');
-                    $('#addfrequency').val('');
-                    $('#data-id').val('');
-                    $('#add-form').toggle(500);
-                })
+            if (!id) {
+                $.ajax({
+                        method: "POST",
+                        url: API_URL,
+                        data: {
+                            letter: $('#addletter').val(),
+                            frequency: $('#addfrequency').val()
+                        }
+                    })
+                    .done(function (data) {
+                        showAlert("Data has been added")
+                        loadData();
+                        $('#addletter').val('')
+                        $('#addfrequency').val('')
+                        $('#add-form').toggle(500);
+                    });
+            } else {
+                $.ajax({
+                        method: "PUT",
+                        url: API_URL + id,
+                        data: {
+                            letter: $('#addletter').val(),
+                            frequency: $('#addfrequency').val()
+                        }
+                    })
+                    .done(function (data) {
+                        showAlert("Data has been edited")
+                        loadData();
+                        $('#addletter').val('');
+                        $('#addfrequency').val('');
+                        $('#data-id').val('');
+                        $('#add-form').toggle(500);
+                    })
+            }
         }
+    }
+
+    function showAlert(data) {
+        $('#input-alert').show();
+        $('#input-alert').html(data);
+    }
+
+    function showAlert1(data) {
+        $('#input-alert-danger').show();
+        $('#input-alert-danger').html(data);
     }
 
     $(document).ready(() => {
         loadData();
         $('#add-form').hide();
         $('#input-alert').hide();
+        $('#input-alert-danger').hide();
 
         $('#button-add').click(function () {
             $('#addletter').val('');
@@ -153,7 +172,7 @@
                     })
                     .done((data) => {
                         console.log(data);
-                        
+
                         let html = "";
                         data.forEach((item, index) => {
                             html += `<tr>`

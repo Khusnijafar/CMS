@@ -52,6 +52,10 @@ router.get('/bar', function(req, res, next) {
   res.render('bar');
 });
 
+router.get('/maps', function(req, res, next) {
+  res.render('maps');
+});
+
 router.get('/map', function(req, res, next) {
   res.render('map');
 });
